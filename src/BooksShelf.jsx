@@ -18,7 +18,6 @@ class BooksShelf extends React.Component {
 
   render() {
     const { books, onAddBook, onShelfChange } = this.props;
-    const { shelf } = this.state;
     console.log(books);
 
     const showingShelf = {};
@@ -39,12 +38,12 @@ class BooksShelf extends React.Component {
         </div>
         <div className="list-books-content">
           <div>
-            {Object.keys(showingShelf).map(_shelf => (
+            {Object.keys(titleMap).map(_shelf => (
                 <div className="bookshelf" key={_shelf}>
                   <h2 className="bookshelf-title">{titleMap[_shelf]}</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {showingShelf[_shelf].map(book => (
+                      {showingShelf[_shelf] && showingShelf[_shelf].map(book => (
                         <Book
                           key={book.id}
                           book={book}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route } from 'react-router-dom';
 import BooksShelf from './BooksShelf';
+import SearchBooks from './SearchBooks';
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 
@@ -26,13 +27,15 @@ class BooksApp extends React.Component {
   handleShelfChange = (book, shelfName) => {
     console.log(book.shelf, shelfName);
     this.setState((state) => {
-      const _books = state.books.map(b => {
-        if (b.id === book.id) {
-          b.shelf = shelfName;
-        }
-        return b;
-      });
-      return { books: _books };
+      const _book = state.books.find(b => b.id === book.id);
+      if (_book) {
+        _book.shelf = shelfName;
+      } else {
+        book.shelf = shelfName;
+        state.books.push(book);
+      }
+
+      return { books: state.books };
     })
   }
 
@@ -40,19 +43,10 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         <Route path="/search" render={({ history }) => (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => {
-                history.goBack();
-              }}>Close</a>
-              <div className="search-books-input-wrapper">
-                <input type="text" placeholder="Search by title or author"/>
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
+          <SearchBooks
+            history={history}
+            onShelfChange={this.handleShelfChange}
+          />
         )} />
         <Route exact path="/" render={({ history }) => (
           <BooksShelf
