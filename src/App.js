@@ -17,11 +17,23 @@ class BooksApp extends React.Component {
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      console.log(books);
       this.setState({
         books
       });
     });
+  }
+
+  handleShelfChange = (book, shelfName) => {
+    console.log(book.shelf, shelfName);
+    this.setState((state) => {
+      const _books = state.books.map(b => {
+        if (b.id === book.id) {
+          b.shelf = shelfName;
+        }
+        return b;
+      });
+      return { books: _books };
+    })
   }
 
   render() {
@@ -46,6 +58,7 @@ class BooksApp extends React.Component {
           <BooksShelf
             books={this.state.books}
             onAddBook={() => { history.push('/search') }}
+            onShelfChange={this.handleShelfChange}
           />
         )} />
       </div>

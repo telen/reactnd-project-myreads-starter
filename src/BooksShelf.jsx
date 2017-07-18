@@ -1,59 +1,37 @@
 import React from 'react';
 import Book from './Book'
 
+const titleMap = {
+  currentlyReading: 'Currently Reading',
+  wantToRead: 'Want to Read',
+  read: 'Read',
+  none: 'None'
+}
+
 class BooksShelf extends React.Component {
   state = {
-    shelf: [],
-    currentlyReading:[],
-    read: [],
-    wantToRead: []
+
   }
 
-  componentWillReceiveProps(nextProps) {
-console.log(nextProps);
-    const { books } = nextProps;
 
 
-    const c = [], r = [], w = [];
-    if (books && books.length) {
-      books.forEach((book) => {
-        switch (book.shelf) {
-          case 'currentlyReading':
-            c.push(book);
-            break;
-          case 'read':
-            r.push(book);
-            break;
-          case 'wantToRead':
-            w.push(book);
-            break;
-          default:
-            console.log('Not belong to any shelf:', book);
-            break;
-        }
-      });
-      this.setState({
-        shelf: [
-          {
-            shelfTitle: 'Currently Reading',
-            books: c
-          },
-          {
-            shelfTitle: 'Want to Read',
-            books: w
-          },
-          {
-            shelfTitle: 'Read',
-            books: r
-          }
-        ]
-      });
-    }
-  }
 
   render() {
-    const { onAddBook } = this.props;
+    const { books, onAddBook, onShelfChange } = this.props;
     const { shelf } = this.state;
+    console.log(books);
+
+    const showingShelf = {};
+
+    if (books && books.length) {
+      books.forEach((book) => {
+        if (!showingShelf[book.shelf]) {
+          showingShelf[book.shelf] = [];
+        }
+        showingShelf[book.shelf].push(book);
+      });
+    }
+
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -61,18 +39,23 @@ console.log(nextProps);
         </div>
         <div className="list-books-content">
           <div>
-            {shelf.map((_shelf, shelfIndex) => (
-              <div className="bookshelf" key={shelfIndex}>
-                <h2 className="bookshelf-title">{_shelf.shelfTitle}</h2>
-                <div className="bookshelf-books">
-                  <ol className="books-grid">
-                    {_shelf.books.map(book => (
-                      <Book book={book} key={book.id} />
-                    ))}
-                  </ol>
+            {Object.keys(showingShelf).map(_shelf => (
+                <div className="bookshelf" key={_shelf}>
+                  <h2 className="bookshelf-title">{titleMap[_shelf]}</h2>
+                  <div className="bookshelf-books">
+                    <ol className="books-grid">
+                      {showingShelf[_shelf].map(book => (
+                        <Book
+                          key={book.id}
+                          book={book}
+                          onShelfChange={onShelfChange}
+                        />
+                      ))}
+                    </ol>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            }
           </div>
         </div>
         <div className="open-search">
