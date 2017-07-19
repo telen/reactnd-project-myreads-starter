@@ -7,12 +7,6 @@ import './App.css'
 
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
      books: []
   }
 
@@ -25,18 +19,28 @@ class BooksApp extends React.Component {
   }
 
   handleShelfChange = (book, shelfName) => {
-    console.log(book.shelf, shelfName);
-    this.setState((state) => {
-      const _book = state.books.find(b => b.id === book.id);
-      if (_book) {
-        _book.shelf = shelfName;
-      } else {
-        book.shelf = shelfName;
-        state.books.push(book);
-      }
+    BooksAPI.update(book, shelfName).then(books => {
+      this.setState((state) => {
+        const oldBooks = Array.from(state.books);
+        const diffBook = oldBooks.find(b => b.id === book.id);
+        // diffBook not exist, it's a new one
+        if (!diffBook) {
+          oldBooks.push(book);
+        }
 
-      return { books: state.books };
-    })
+        const newBooks = []; // store the updated books from server
+        // compare the updated shelf width local books and update thire shelves
+        Object.keys(books).forEach(shelf => {
+          books[shelf].forEach(bookId => {
+            const theBook = oldBooks.find(b => b.id === bookId);
+            theBook.shelf = shelf;
+            newBooks.push(theBook);
+          });
+        });
+
+        return { books: newBooks };
+      });
+    });
   }
 
   render() {

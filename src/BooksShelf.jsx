@@ -1,24 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Book from './Book'
 
 const titleMap = {
   currentlyReading: 'Currently Reading',
   wantToRead: 'Want to Read',
-  read: 'Read',
-  none: 'None'
+  read: 'Read'
 }
 
 class BooksShelf extends React.Component {
-  state = {
-
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    onAddBook: PropTypes.func.isRequired,
+    onShelfChange: PropTypes.func.isRequired
   }
-
-
-
 
   render() {
     const { books, onAddBook, onShelfChange } = this.props;
-    console.log(books);
 
     const showingShelf = {};
 
