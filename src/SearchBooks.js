@@ -16,9 +16,19 @@ class SearchBooks extends React.Component {
 
   onInputChange = (value) => {
     if (value.trim()) {
-      BooksAPI.search(value, 10).then((books) => {
+      BooksAPI.search(value, 20).then((searchResultsBook) => {
+        if (_.isArray(searchResultsBook)) {
+          this.props.books.map(book => {
+            searchResultsBook.map(sBook => {
+              if(sBook.id === book.id) {
+                 sBook.shelf = book.shelf;
+              }
+            });
+          });
+        }
+
         this.setState({
-          books,
+          books: searchResultsBook
         });
       });
     } else {
@@ -26,12 +36,11 @@ class SearchBooks extends React.Component {
         books: []
       });
     }
-
   }
 
   render() {
     const { history, onShelfChange } = this.props;
-    const debounceInput = _.debounce(this.onInputChange, 500);
+    const debounceInput = _.debounce(this.onInputChange, 300);
     const { books } = this.state;
 
     return (

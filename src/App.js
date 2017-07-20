@@ -50,6 +50,7 @@ class BooksApp extends React.Component {
           <SearchBooks
             history={history}
             onShelfChange={this.handleShelfChange}
+            books={this.state.books}
           />
         )} />
         <Route exact path="/" render={({ history }) => (
