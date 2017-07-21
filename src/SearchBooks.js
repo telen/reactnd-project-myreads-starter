@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import * as BooksAPI from './BooksAPI';
-import Book from './Book'
+import BooksGrid from './BooksGrid';
 
 class SearchBooks extends React.Component {
   static propTypes = {
+    books: PropTypes.array.isRequired,
     history: PropTypes.object.isRequired,
     onShelfChange: PropTypes.func.isRequired
   }
@@ -58,16 +59,10 @@ class SearchBooks extends React.Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">
-            {_.isArray(books) && books.map(book => (
-              <Book
-                key={book.id}
-                book={book}
-                onShelfChange={onShelfChange}
-              />
-            ))}
-            {!_.isArray(books) && <div>No Results</div>}
-          </ol>
+          <BooksGrid
+            books={books}
+            onShelfChange={onShelfChange}
+           />
         </div>
       </div>
     )

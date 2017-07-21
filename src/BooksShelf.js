@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Book from './Book'
+import BooksGrid from './BooksGrid';
 
 const titleMap = {
   currentlyReading: 'Currently Reading',
@@ -40,15 +40,10 @@ class BooksShelf extends React.Component {
                 <div className="bookshelf" key={_shelf}>
                   <h2 className="bookshelf-title">{titleMap[_shelf]}</h2>
                   <div className="bookshelf-books">
-                    <ol className="books-grid">
-                      {showingShelf[_shelf] && showingShelf[_shelf].map(book => (
-                        <Book
-                          key={book.id}
-                          book={book}
-                          onShelfChange={onShelfChange}
-                        />
-                      ))}
-                    </ol>
+                    <BooksGrid
+                      books={showingShelf[_shelf]}
+                      onShelfChange={onShelfChange}
+                     />
                   </div>
                 </div>
               ))

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import BooksShelf from './BooksShelf';
 import SearchBooks from './SearchBooks';
 import * as BooksAPI from './BooksAPI'
@@ -29,7 +29,7 @@ class BooksApp extends React.Component {
         }
 
         const newBooks = []; // store the updated books from server
-        // compare the updated shelf width local books and update thire shelves
+        // compare the updated shelf width local books and update their shelves
         Object.keys(books).forEach(shelf => {
           books[shelf].forEach(bookId => {
             const theBook = oldBooks.find(b => b.id === bookId);
@@ -46,6 +46,7 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
+        <Switch>
         <Route path="/search" render={({ history }) => (
           <SearchBooks
             history={history}
@@ -60,6 +61,10 @@ class BooksApp extends React.Component {
             onShelfChange={this.handleShelfChange}
           />
         )} />
+        <Route render={() => (
+          <h2>404 Not Found</h2>
+        )} />
+        </Switch>
       </div>
     )
   }
